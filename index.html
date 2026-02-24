@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willow Productions</title>
+    <meta name="description" content="Willow Productions — software studio.">
+    <link rel="icon" type="image/png" href="./willow-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #060606;
+            --charcoal: #0E0E0E;
+            --charcoal-light: #161616;
+            --charcoal-lighter: #1E1E1E;
+            --gold: #8B7D3C;
+            --gold-light: #A89A56;
+            --warm-white: #F0EBE3;
+            --warm-gray: #9A9488;
+            --warm-gray-dim: #5A5650;
+            --triall-purple: #7C5CFC;
+            --triall-purple-dim: rgba(124, 92, 252, 0.12);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--warm-white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+        }
+
+        ::selection {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.4s, backdrop-filter 0.4s, padding 0.4s;
+        }
+
+        nav.scrolled {
+            background: rgba(6, 6, 6, 0.85);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            padding: 0.75rem 3rem;
+            border-bottom: 1px solid rgba(139, 125, 60, 0.1);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--warm-white);
+        }
+
+        .nav-logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .nav-logo span {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--warm-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--warm-white); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 256px;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-logo {
+            width: 140px;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 60px rgba(139, 125, 60, 0.2));
+            animation: logoFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+        }
+
+        .hero h1 .gold {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), #6B5F2E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--warm-gray-dim);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: fadeInUp 1s ease 1.5s both;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.4; transform: scaleY(0.6); }
+        }
+
+        /* ─── SECTIONS ─── */
+        section { padding: 8rem 3rem; }
+
+        .section-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 2rem;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        /* ─── PROJECT ─── */
+        .project-section {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-info h3 {
+            font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .project-tagline {
+            font-size: 1rem;
+            color: var(--triall-purple);
+            font-weight: 400;
+            margin-bottom: 1.25rem;
+        }
+
+        .project-desc {
+            color: var(--warm-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--warm-white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            transition: gap 0.3s;
+        }
+
+        .project-link:hover { gap: 1rem; }
+
+        /* Browser Mockup */
+        .browser-mockup {
+            background: var(--charcoal);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow:
+                0 24px 80px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(255,255,255,0.03) inset;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s;
+        }
+
+        .browser-mockup:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow:
+                0 32px 100px rgba(124, 92, 252, 0.08),
+                0 0 0 1px rgba(124, 92, 252, 0.1) inset;
+        }
+
+        .browser-topbar {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--charcoal-light);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            gap: 0.75rem;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .browser-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .browser-url {
+            flex: 1;
+            background: rgba(255,255,255,0.04);
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--warm-gray);
+            font-family: 'DM Sans', monospace;
+        }
+
+        .browser-body {
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+        }
+
+        .browser-body img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        /* ─── MORE COMING ─── */
+        .more-coming {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 6rem 3rem;
+            text-align: center;
+        }
+
+        .more-coming p {
+            font-size: 0.85rem;
+            color: var(--warm-gray-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        /* ─── DIVIDER ─── */
+        .divider {
+            max-width: 1100px;
+            margin: 0 auto;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(139, 125, 60, 0.15), transparent);
+        }
+
+        /* ─── CONTACT ─── */
+        .contact {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 8rem 3rem;
+        }
+
+        .contact-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 2.25rem;
+            background: transparent;
+            border: 1px solid rgba(139, 125, 60, 0.3);
+            border-radius: 100px;
+            color: var(--gold-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            transition: background 0.4s, color 0.4s, box-shadow 0.4s, border-color 0.4s;
+        }
+
+        .contact-email:hover {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+            box-shadow: 0 0 40px rgba(139, 125, 60, 0.2);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            padding: 2rem 3rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        footer p {
+            font-size: 0.7rem;
+            color: var(--warm-gray-dim);
+            font-weight: 300;
+        }
+
+        footer .footer-logo {
+            height: 20px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        footer .footer-logo:hover { opacity: 0.6; }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content > * {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+        .hero-content > *:nth-child(2) { animation-delay: 0.3s; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav { padding: 1rem 1.5rem; }
+            nav.scrolled { padding: 0.75rem 1.5rem; }
+            .nav-links { display: none; }
+            section { padding: 5rem 1.5rem; }
+
+            .project-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .more-coming { padding: 4rem 1.5rem; }
+            .contact { padding: 5rem 1.5rem; }
+            footer { padding: 1.5rem; flex-direction: column; gap: 1rem; }
+        }
+
+        @media (max-width: 500px) {
+            .hero-logo { width: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+    <a href="#" class="nav-logo">
+        <img src="./willow-logo.png" alt="Willow Productions">
+        <span>Willow</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+    <div class="hero-bg"><canvas id="heroCanvas"></canvas></div>
+    <div class="hero-grain"></div>
+    <div class="hero-content">
+        <img src="./willow-logo.png" alt="Willow Productions" class="hero-logo">
+        <h1>Willow <span class="gold">Productions</span></h1>
+    </div>
+    <div class="hero-scroll">
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- PROJECT -->
+<section id="projects">
+    <div class="project-section">
+        <div class="project-card">
+            <div class="project-info">
+                <div class="section-label">Current project</div>
+                <h3>Triall.ai</h3>
+                <p class="project-tagline">Three AIs. One verdict.</p>
+                <p class="project-desc">Multi-model reasoning platform. Three AI models weigh in on your problem — you get one synthesized verdict.</p>
+                <a href="https://triall.ai" target="_blank" rel="noopener" class="project-link">
+                    triall.ai &rarr;
+                </a>
+            </div>
+            <a href="https://triall.ai" target="_blank" rel="noopener" style="text-decoration:none;">
+                <div class="browser-mockup">
+                    <div class="browser-topbar">
+                        <div class="browser-dots"><span></span><span></span><span></span></div>
+                        <div class="browser-url">triall.ai</div>
+                    </div>
+                    <div class="browser-body">
+                        <img src="./triall-screenshot.png" alt="Triall.ai" loading="lazy">
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<div class="more-coming reveal">
+    <p>More to come.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact reveal">
+    <a href="mailto:hello@willowproductions.net" class="contact-email">
+        hello@willowproductions.net
+    </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2025 Willow Productions</p>
+    <img src="./willow-logo.png" alt="Willow" class="footer-logo">
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+const reveals = document.querySelectorAll('.reveal, .project-card');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: -1000, y: -1000 };
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+function createParticles() {
+    particles = [];
+    const count = Math.floor((canvas.width * canvas.height) / 20000);
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.25,
+            vy: (Math.random() - 0.5) * 0.25,
+            r: Math.random() * 1.2 + 0.3,
+        });
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 110) {
+                const alpha = (1 - dist / 110) * 0.08;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(139, 125, 60, ${alpha})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+    }
+
+    particles.forEach(p => {
+        const mdx = p.x - mouse.x;
+        const mdy = p.y - mouse.y;
+        const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (mDist < 150) {
+            const force = (150 - mDist) / 150 * 0.015;
+            p.vx += (mdx / mDist) * force;
+            p.vy += (mdy / mDist) * force;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(139, 125, 60, 0.3)';
+        ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', () => { resize(); createParticles(); });
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+resize();
+createParticles();
+draw();
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+</script>
+
+</body>
+</html>
